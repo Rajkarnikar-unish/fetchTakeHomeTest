@@ -1,18 +1,14 @@
 package com.rajkarnikarunish.fetchrewards
 
-import android.os.Build.VERSION_CODES.P
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rajkarnikarunish.fetchrewards.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import retrofit2.Response
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     
@@ -33,18 +29,19 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO) { 
             try {
                 val response = RetrofitInstance.api.getItems()
+                
                 val items = response
                     .filter { it.name?.isNotBlank() == true}
-                    .sortedWith(compareBy({it.listId}, {it.name}))
-                
-                val groupedItems = items.groupBy { it.listId }
-                val sortedGroupedItems = groupedItems.toSortedMap()
-                
+                    .map { "${it.listId} ${it.name}" }
+                    .sortedWith(AlphaNumComparator())
+
+                println(items)
+                val groupedItems = items.groupBy { it.split(' ')[0] }
+                println(groupedItems)
+
                 launch(Dispatchers.Main) {
-                    itemAdapter.setItems(sortedGroupedItems)
+                    itemAdapter.setItems(groupedItems)
                 }
-                
-                Log.e("MainActivity", items.toString()) 
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error Fetching Items: ${e.message}")
             }
