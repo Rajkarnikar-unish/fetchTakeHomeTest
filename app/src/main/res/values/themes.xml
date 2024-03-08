@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FetchRewards" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/berry</item>
+        <item name="colorPrimaryVariant">@color/indigo_500</item>
+        <item name="colorOnPrimary">@color/gray_300</item>
+    </style>
+
+    <style name="Theme.FetchRewards" parent="Base.Theme.FetchRewards" />
+</resources>
